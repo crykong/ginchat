@@ -1,7 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"ginchat/models"
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -10,7 +12,6 @@ import (
 // Summary 所有用户
 // @Tags 首页
 // @Accept json
-// @Produce json
 // @Success 200 {string} json{"code","message"}
 // @Router /user/getuserlist  [get]
 func GetUserList(c *gin.Context) {
@@ -30,7 +31,6 @@ func GetUserList(c *gin.Context) {
 // @param password query string false "密码"
 // @param repassword query string false "确定密码"
 // @Accept json
-// @Produce json
 // @Success 200 {string} json{"code","message"}
 // @Router /user/creatuser [get]
 func CreateUser(pa *gin.Context) {
@@ -60,7 +60,6 @@ func CreateUser(pa *gin.Context) {
 // @param password query string false "密码"
 // @param repassword query string false "确定密码"
 // @Accept json
-// @Produce json
 // @Success 200 {string} json{"code","message"}
 // @Router /user/deleteuser [get]
 func DeleteUser(pa *gin.Context) {
@@ -78,8 +77,9 @@ func DeleteUser(pa *gin.Context) {
 // @Tags 首页
 // @param name query string false "用户名称"
 // @param password query string false "密码"
+// @param phone query string false "电话"
+// @param email query string false "邮箱"
 // @Accept json
-// @Produce json
 // @Success 200 {string} json{"code","message"}
 // @Router /user/updateteuser [post]
 func UpdateUser(pa *gin.Context) {
@@ -88,9 +88,20 @@ func UpdateUser(pa *gin.Context) {
 	user.ID = uint(id)
 	user.Name = pa.PostForm("name")
 	user.Password = pa.PostForm("password")
+	user.Phone = pa.PostForm("phone")
+	user.Email = pa.PostForm("email")
 
-	models.UpdateUser(user)
-	pa.JSON(200, gin.H{
-		"message": "修改用户和曾给",
-	})
+	_, err := govalidator.ValidateStruct(user)
+	if err != nil {
+		fmt.Println(err)
+		pa.JSON(200, gin.H{
+			"message": "修改参数不正确",
+		})
+		return
+	} else {
+		models.UpdateUser(user)
+		pa.JSON(200, gin.H{
+			"message": "修改用户和曾给",
+		})
+	}
 }

@@ -11,8 +11,8 @@ type UserBasic struct {
 	gorm.Model
 	Name          string `gorm:"名字"`
 	Password      string `gorm:"密码"`
-	Phone         string
-	Email         string
+	Phone         string `valid:"matcher(^1[3-9]{1}\\d{9$})"`
+	Email         string `valid:"email"`
 	Identity      string
 	ClientIp      string
 	ClinetPort    string
@@ -23,7 +23,6 @@ type UserBasic struct {
 	DeviceInfo    string
 }
 
-// /创建表
 func (table *UserBasic) TableName() string {
 	return "User_basic"
 
@@ -45,5 +44,5 @@ func DeleteUesr(user UserBasic) *gorm.DB {
 	return utils.DB.Delete(user)
 }
 func UpdateUser(user UserBasic) *gorm.DB {
-	return utils.DB.Delete(user)
+	return utils.DB.Model(&user).Updates(UserBasic{Name: user.Name, Password: user.Password, Phone: user.Phone})
 }
