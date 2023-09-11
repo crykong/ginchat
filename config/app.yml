@@ -1,0 +1,11 @@
+#  mysql:
+#   dns:root:aNXvf&qYQ4NJTt7DPzPdGoGg@tcp(127.0.0.1:3306)/ginchat?parseTime=true
+
+# app.yml
+
+mysql:
+  username: root
+  password: aNXvf&qYQ4NJTt7DPzPdGoGg
+  host: localhost
+  port: 3306
+  dbname: ginchat
