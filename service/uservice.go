@@ -35,7 +35,14 @@ func GetUserList(c *gin.Context) {
 // @Router /user/creatuser [get]
 func CreateUser(pa *gin.Context) {
 	user := models.UserBasic{}
-	user.Name = pa.Query("name")
+	name := pa.Query("name")
+	user.Name = name
+	udata := models.FindUserByName(name)
+	if udata != nil {
+		pa.JSON(-1, gin.H{
+			"message": "用户已经注册",
+		})
+	}
 	password := pa.Query("password")
 	repassword := pa.Query("repassword")
 	if password != repassword {
