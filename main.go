@@ -10,6 +10,6 @@ func main() {
 	utils.InitConfig()
 	utils.InitMysql()
 	r := router.Router()
-	r.Run() //r.Run()   //http://127.0.0.1:8080/index
+	r.Run()
 
 }

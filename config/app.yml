@@ -5,7 +5,7 @@
 
 mysql:
   username: root
-  password: aNXvf&qYQ4NJTt7DPzPdGoGg
-  host: localhost
+  password: 7ujm8ik,
+  host: 127.0.0.1
   port: 3306
   dbname: ginchat
