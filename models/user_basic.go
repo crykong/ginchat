@@ -16,6 +16,7 @@ type UserBasic struct {
 	Identity      string
 	ClientIp      string
 	ClinetPort    string
+	Salt          string
 	LoginTime     uint64
 	HeartbeatTime uint64
 	LoginOutTime  uint64 `gorm:"column:login_out_time" json:"login_out_time"`
@@ -25,7 +26,6 @@ type UserBasic struct {
 
 func (table *UserBasic) TableName() string {
 	return "User_basic"
-
 }
 
 func GetUserList() []*UserBasic {
@@ -37,9 +37,16 @@ func GetUserList() []*UserBasic {
 	return data
 }
 
-func FindUserByName(name string) *gorm.DB {
+func FindUserByNameAndPwd(name string, password string) UserBasic {
 	user := UserBasic{}
-	return utils.DB.Where("name = ?", name).First(&user)
+	utils.DB.Where("name = ? and pass_word=?", name, password).First(&user)
+	return user
+}
+
+func FindUserByName(name string) UserBasic {
+	user := UserBasic{}
+	utils.DB.Where("name = ?", name).First(&user)
+	return user
 }
 
 func FindUserByPhone(phone string) *gorm.DB {
@@ -52,12 +59,17 @@ func FindUserByEmail(email string) *gorm.DB {
 	return utils.DB.Where("email = ?", email).First(&user)
 }
 
-func CreateUesr(user UserBasic) *gorm.DB {
-	return utils.DB.Create(user)
+func CreateUser(user UserBasic) (*gorm.DB, error) {
+	fmt.Println(user.Name, user.Password)
+	result := utils.DB.Create(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return result, nil
 }
 
 func DeleteUesr(user UserBasic) *gorm.DB {
-	return utils.DB.Delete(user)
+	return utils.DB.Delete(&user)
 }
 func UpdateUser(user UserBasic) *gorm.DB {
 	return utils.DB.Model(&user).Updates(UserBasic{Name: user.Name, Password: user.Password, Phone: user.Phone})

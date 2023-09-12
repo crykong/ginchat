@@ -14,15 +14,89 @@ paths:
             type: string
       tags:
       - 首页
-  /user/getuserList:
+  /user/creatuser:
     get:
       consumes:
       - application/json
-      produces:
+      parameters:
+      - description: 用户名称
+        in: query
+        name: name
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        type: string
+      - description: 确定密码
+        in: query
+        name: repassword
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      tags:
+      - 首页
+  /user/deleteuser:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名称
+        in: query
+        name: name
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        type: string
+      - description: 确定密码
+        in: query
+        name: repassword
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      tags:
+      - 首页
+  /user/getuserlist:
+    get:
+      consumes:
       - application/json
       responses:
         "200":
-          description: OK
+          description: code","message"}
+          schema:
+            type: string
+      tags:
+      - 首页
+  /user/updateteuser:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名称
+        in: query
+        name: name
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        type: string
+      - description: 电话
+        in: query
+        name: phone
+        type: string
+      - description: 邮箱
+        in: query
+        name: email
+        type: string
+      responses:
+        "200":
+          description: code","message"}
           schema:
             type: string
       tags:
