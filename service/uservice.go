@@ -35,6 +35,7 @@ func GetUserList(c *gin.Context) {
 // @Router /user/creatuser [get]
 func CreateUser(pa *gin.Context) {
 	user := models.UserBasic{}
+
 	name := pa.Query("name")
 	user.Name = name
 	udata := models.FindUserByName(name)
@@ -43,6 +44,7 @@ func CreateUser(pa *gin.Context) {
 			"message": "用户已经注册",
 		})
 	}
+	//salt：=fmt.Sprinft("%06d",rand.int32())
 	password := pa.Query("password")
 	repassword := pa.Query("repassword")
 	if password != repassword {
@@ -53,6 +55,7 @@ func CreateUser(pa *gin.Context) {
 		return
 	}
 	user.Password = password
+	//user.Password=utils.MakePassword(password,salt)
 	models.CreateUesr(user)
 	pa.JSON(200, gin.H{
 		"message": "用户创建成功",
