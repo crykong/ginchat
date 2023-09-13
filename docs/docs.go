@@ -42,8 +42,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "首页"
+                    "首页Api"
                 ],
+                "summary": "新增用户",
                 "parameters": [
                     {
                         "type": "string",
@@ -80,8 +81,36 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "首页"
+                    "首页Api"
                 ],
+                "summary": "删除用户",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名称",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/findUserbynameandpwd": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "首页Api"
+                ],
+                "summary": "登录",
                 "parameters": [
                     {
                         "type": "string",
@@ -93,12 +122,6 @@ const docTemplate = `{
                         "type": "string",
                         "description": "密码",
                         "name": "password",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "确定密码",
-                        "name": "repassword",
                         "in": "query"
                     }
                 ],
@@ -120,6 +143,7 @@ const docTemplate = `{
                 "tags": [
                     "首页"
                 ],
+                "summary": "所有用户",
                 "responses": {
                     "200": {
                         "description": "code\",\"message\"}",
@@ -136,9 +160,16 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "首页"
+                    "首页Api"
                 ],
+                "summary": "修改用户",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名称",
+                        "name": "id",
+                        "in": "query"
+                    },
                     {
                         "type": "string",
                         "description": "用户名称",

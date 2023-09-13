@@ -36,10 +36,28 @@ paths:
           description: code","message"}
           schema:
             type: string
+      summary: 新增用户
       tags:
-      - 首页
+      - 首页Api
   /user/deleteuser:
     get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名称
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 删除用户
+      tags:
+      - 首页Api
+  /user/findUserbynameandpwd:
+    post:
       consumes:
       - application/json
       parameters:
@@ -51,17 +69,14 @@ paths:
         in: query
         name: password
         type: string
-      - description: 确定密码
-        in: query
-        name: repassword
-        type: string
       responses:
         "200":
           description: code","message"}
           schema:
             type: string
+      summary: 登录
       tags:
-      - 首页
+      - 首页Api
   /user/getuserlist:
     get:
       consumes:
@@ -71,6 +86,7 @@ paths:
           description: code","message"}
           schema:
             type: string
+      summary: 所有用户
       tags:
       - 首页
   /user/updateteuser:
@@ -78,6 +94,10 @@ paths:
       consumes:
       - application/json
       parameters:
+      - description: 用户名称
+        in: query
+        name: id
+        type: string
       - description: 用户名称
         in: query
         name: name
@@ -99,6 +119,7 @@ paths:
           description: code","message"}
           schema:
             type: string
+      summary: 修改用户
       tags:
-      - 首页
+      - 首页Api
 swagger: "2.0"

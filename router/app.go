@@ -22,5 +22,7 @@ func Router() *gin.Engine {
 
 	r.POST("/user/findUserbynameandpwd", service.FindUserByNameAndPwd)
 
+	//发送消息 ws://127.0.0.1:8080/user/sendmsg
+	r.GET("user/sendmsg", service.Sendmsg)
 	return r
 }

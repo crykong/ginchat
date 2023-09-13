@@ -1,7 +1,10 @@
 package utils
 
 import (
+	"context"
 	"fmt"
+	//"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm/logger"
 	"log"
 	"os"
@@ -12,9 +15,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var (
+	DB  *gorm.DB
+	Red *redis.Client
+)
 
 func InitConfig() {
+
 	viper.SetConfigName("app")
 	viper.AddConfigPath("config")
 	err := viper.ReadInConfig()
@@ -39,16 +46,58 @@ func InitMysql() {
 	host := viper.GetString("mysql.host")
 	port := viper.GetInt("mysql.port")
 	dbname := viper.GetString("mysql.dbname")
-
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		username, password, host, port, dbname)
-
 	var err error
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: newlog}) // 修正这里的logger -> Logger
 	if err != nil {
 		fmt.Println("Failed to connect to database:", err)
 		return
 	}
-
 	fmt.Println("Connected to MySQL database!")
+}
+
+func InitRedis() {
+	Red = redis.NewClient(&redis.Options{
+		Addr:     viper.GetString("redis.Addr"),
+		Password: viper.GetString("redis.Password"),
+		DB:       2,
+		PoolSize: 30,
+	})
+	//pong, err := Red.Ping().Result()
+	//if err != nil {
+	//	fmt.Println("init redis", err)
+	//} else {
+	//	fmt.Println("redis inited ...", pong)
+	//}
+}
+
+const (
+	Publishkey = "websocket"
+)
+
+// publish  订阅redis 消息
+func Publish(ctx context.Context, channel string, msg string) error {
+	//ctx := c.Request.Context()
+	var err error
+	fmt.Println("Publish ....", msg)
+	err = Red.Publish(ctx, channel, msg).Err()
+	if err != nil {
+		fmt.Println(err)
+	}
+	return err
+}
+
+// Subscribe  订阅redis 消息
+func Subscribe(ctx context.Context, channel string) (string, error) {
+	sub := Red.Subscribe(ctx, channel)
+
+	fmt.Println("subscribe....001", ctx)
+	msg, err := sub.ReceiveMessage(ctx)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	fmt.Println("subscribe....002", msg.Payload)
+	return msg.Payload, err
 }

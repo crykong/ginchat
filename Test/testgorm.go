@@ -2,17 +2,22 @@ package main
 
 import (
 	"ginchat/models"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func main() {
-	db, err := gorm.Open(mysql.Open("root:aNXvf&qYQ4NJTt7DPzPdGoGg@tcp(127.0.0.1:3306)/ginchat?parseTime=true"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open("root:aNXvf&qYQ4NJTt7DPzPdGoGg@tcp(127.0.0.1:3306)/ginchat?charset=utf8mb4&parseTime=true"), &gorm.Config{})
+
 	if err != nil {
 		panic("数据库链接失败")
 	}
-	db.AutoMigrate(&models.UserBasic{})
+
+	//db.AutoMigrate(&models.Message{})
+	db.AutoMigrate(&models.Contact{})
+	db.AutoMigrate(&models.GroupBasic{})
+	db.AutoMigrate(&models.Message{})
+	//	db.AutoMigrate(&models.UserBasic{})
 
 	//Create
 	//user := &models.UserBasic{}
