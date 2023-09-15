@@ -17,3 +17,12 @@ redis:
   poolSize: 30
   minIdleConn: 30
 
+timeout:
+  DelayHeartbeat: 3   #延迟心跳时间  单位秒
+  HeartbeatHz: 30   #每隔多少秒心跳时间
+  HeartbeatMaxTime: 30000  #最大心跳时间  ，超过此就下线
+  RedisOnlineTime: 4  #缓存的在线用户时长   单位H
+
+port:
+  server: ":8080"
+  udp: 3001

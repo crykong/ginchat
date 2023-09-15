@@ -1,34 +1,40 @@
+/**
+* @Auth:ShenZ
+* @Description:
+* @CreateDate:2022/06/15 14:57:55
+ */
 package models
 
 import (
 	"fmt"
 	"ginchat/utils"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type UserBasic struct {
 	gorm.Model
-	Name          string `gorm:"名字"`
-	Password      string `gorm:"密码"`
-	Phone         string `valid:"matcher(^1[3-9]{1}\\d{9$})"`
+	Name          string
+	PassWord      string
+	Phone         string `valid:"matches(^1[3-9]{1}\\d{9}$)"`
 	Email         string `valid:"email"`
+	Avatar        string //头像
 	Identity      string
 	ClientIp      string
-	ClinetPort    string
+	ClientPort    string
 	Salt          string
-	LoginTime     uint64
-	HeartbeatTime uint64
-	LoginOutTime  uint64 `gorm:"column:login_out_time" json:"login_out_time"`
-	IsLoginOut    bool
+	LoginTime     time.Time
+	HeartbeatTime time.Time
+	LoginOutTime  time.Time `gorm:"column:login_out_time" json:"login_out_time"`
+	IsLogout      bool
 	DeviceInfo    string
 }
 
 func (table *UserBasic) TableName() string {
-	return "User_basic"
+	return "user_basic"
 }
 
-// GetUserList 获取用户列表
 func GetUserList() []*UserBasic {
 	data := make([]*UserBasic, 10)
 	utils.DB.Find(&data)
@@ -38,73 +44,43 @@ func GetUserList() []*UserBasic {
 	return data
 }
 
-// FindUserByNameAndPwd 登录
 func FindUserByNameAndPwd(name string, password string) UserBasic {
 	user := UserBasic{}
-	utils.DB.Where("name = ? and password = ?", name, password).First(&user)
-	//token 加密
+	utils.DB.Where("name = ? and pass_word=?", name, password).First(&user)
+
+	//token加密
 	str := fmt.Sprintf("%d", time.Now().Unix())
-	temp := utils.Md5Encode(str)
-	utils.DB.Model(&user).Where("id =?", user.ID).Update("identity", temp)
+	temp := utils.MD5Encode_(str)
+	utils.DB.Model(&user).Where("id = ?", user.ID).Update("identity", temp)
 	return user
 }
 
-// FindUserByName 根据用户名称获取对象
-func FindUserByName(name string) (UserBasic, error) {
+func FindUserByName(name string) UserBasic {
 	user := UserBasic{}
-	result := utils.DB.Where("name = ?", name).First(&user)
-	if result.Error != nil {
-		return user, result.Error
-	}
-	return user, nil
+	utils.DB.Where("name = ?", name).First(&user)
+	return user
 }
-
 func FindUserByPhone(phone string) *gorm.DB {
 	user := UserBasic{}
-	return utils.DB.Where("phone = ?", phone).First(&user)
+	return utils.DB.Where("Phone = ?", phone).First(&user)
 }
-
 func FindUserByEmail(email string) *gorm.DB {
 	user := UserBasic{}
 	return utils.DB.Where("email = ?", email).First(&user)
 }
-
-// CreateUser  创建用户
-func CreateUser(user UserBasic) (*gorm.DB, error) {
-	result := utils.DB.Create(&user)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return result, nil
+func CreateUser(user UserBasic) *gorm.DB {
+	return utils.DB.Create(&user)
 }
-
-// DeleteUesr 删除用户
-func DeleteUesr(user UserBasic) *gorm.DB {
+func DeleteUser(user UserBasic) *gorm.DB {
 	return utils.DB.Delete(&user)
 }
+func UpdateUser(user UserBasic) *gorm.DB {
+	return utils.DB.Model(&user).Updates(UserBasic{Name: user.Name, PassWord: user.PassWord, Phone: user.Phone, Email: user.Email, Avatar: user.Avatar})
+}
 
-// UpdateUser 更新用户对象
-//
-//	func UpdateUser(user UserBasic) *gorm.DB {
-//		return utils.DB.Model(&user).Where("id = ?", user.ID).Updates(UserBasic{Name: user.Name, Password: user.Password, Phone: user.Phone})
-//		//return utils.DB.Model(&UserBasic{}).Where("id = ?", user.ID).Updates(&user)
-//	}
-//
-// UpdateUser 更新用户对象
-func UpdateUser(user UserBasic) (*gorm.DB, error) {
-	// 构建要更新的字段映射
-	updates := map[string]interface{}{
-		"name":     user.Name,
-		"password": user.Password,
-		"phone":    user.Phone,
-		"email":    user.Email,
-	}
-	// 执行更新并获取结果
-	result := utils.DB.Model(&UserBasic{}).Where("id = ?", user.ID).Updates(updates)
-
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return result, nil
+// 查找某个用户
+func FindByID(id uint) UserBasic {
+	user := UserBasic{}
+	utils.DB.Where("id = ?", id).First(&user)
+	return user
 }

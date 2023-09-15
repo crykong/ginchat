@@ -73,14 +73,13 @@ func InitRedis() {
 }
 
 const (
-	Publishkey = "websocket"
+	PublishKey = "websocket"
 )
 
-// publish  订阅redis 消息
+// Publish 发布消息到Redis
 func Publish(ctx context.Context, channel string, msg string) error {
-	//ctx := c.Request.Context()
 	var err error
-	fmt.Println("Publish ....", msg)
+	fmt.Println("Publish 。。。。", msg)
 	err = Red.Publish(ctx, channel, msg).Err()
 	if err != nil {
 		fmt.Println(err)
@@ -88,16 +87,15 @@ func Publish(ctx context.Context, channel string, msg string) error {
 	return err
 }
 
-// Subscribe  订阅redis 消息
+// Subscribe 订阅Redis消息
 func Subscribe(ctx context.Context, channel string) (string, error) {
 	sub := Red.Subscribe(ctx, channel)
-
-	fmt.Println("subscribe....001", ctx)
+	fmt.Println("Subscribe 。。。。", ctx)
 	msg, err := sub.ReceiveMessage(ctx)
 	if err != nil {
 		fmt.Println(err)
 		return "", err
 	}
-	fmt.Println("subscribe....002", msg.Payload)
+	fmt.Println("Subscribe 。。。。", msg.Payload)
 	return msg.Payload, err
 }
