@@ -17,7 +17,7 @@ func main() {
 	db.AutoMigrate(&models.Contact{})
 	db.AutoMigrate(&models.GroupBasic{})
 	db.AutoMigrate(&models.Message{})
-	//	db.AutoMigrate(&models.UserBasic{})
+	db.AutoMigrate(&models.UserBasic{})
 
 	//Create
 	//user := &models.UserBasic{}
