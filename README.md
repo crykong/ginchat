@@ -1,7 +1,11 @@
 # ginchat
 ginchat
 
-Go mod tidy
+打开终端，进入项目目录，并使用go mod init命令初始化一个新的Go模块。将module-name替换为您要为模块命名的名称：
+go mod init myapp
+
+//重新加载
+go mod tidy
 swag init
 
 四 整合 Swagger
@@ -25,6 +29,7 @@ ERROR: error during connect: this error may indicate that the docker daemon is n
 wsl --update
 
 
+检查版本： protobuf --version
 
 
 

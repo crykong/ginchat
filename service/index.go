@@ -49,7 +49,8 @@ func ToChat(c *gin.Context) {
 	user := models.UserBasic{}
 	user.ID = uint(userId)
 	user.Identity = token
-	//fmt.Println("ToChat>>>>>>>>", user)
+	// 这一行代码使用一个模板引擎对象（假设是ind）的Execute方法，将user对象渲染到响应中。这通常用于生成动态的HTML或其他文本内容，
+	//其中c.Writer表示响应的写入流，user对象是模板的数据上下文，模板引擎将根据模板文件和数据上下文生成最终的输出。
 	ind.Execute(c.Writer, user)
 	// c.JSON(200, gin.H{
 	// 	"message": "welcome !!  ",
